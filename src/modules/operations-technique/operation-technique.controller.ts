@@ -1,22 +1,24 @@
 import { Controller, UseInterceptors } from '@nestjs/common';
 import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 import { crudGeneralOptions } from 'src/config';
-import { User } from 'src/entities';
-import { UsersService } from './users.service';
+import { OperationTechnique } from 'src/entities';
+import { OperationTechniquesService } from './operation-technique.service';
 import { ApiTags } from '@nestjs/swagger';
 
 @Crud({
   ...crudGeneralOptions,
   model: {
-    type: User,
+    type: OperationTechnique,
   },
   routes: {
     exclude: ['recoverOneBase', 'createManyBase'],
   },
 })
-@Controller('users')
-@ApiTags('Users')
+@Controller('operations-techniques')
+@ApiTags('Operation Techniques')
 @UseInterceptors(CrudRequestInterceptor)
-export class UsersController implements CrudController<User> {
-  constructor(public readonly service: UsersService) {}
+export class OperationTechniquesController
+  implements CrudController<OperationTechnique>
+{
+  constructor(public readonly service: OperationTechniquesService) {}
 }
