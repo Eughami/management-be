@@ -16,20 +16,11 @@ export abstract class AbstractEntity {
   id: string;
 
   @ApiProperty({ description: 'Creation timestamp', readOnly: true })
-  @CreateDateColumn({
-    type: 'timestamp with time zone', // Standard Postgres type
-    default: () => 'CURRENT_TIMESTAMP',
-    nullable: false,
-  })
+  @CreateDateColumn({ type: 'timestamptz', nullable: false })
   created_at: Date;
 
   @ApiProperty({ description: 'Last update timestamp', readOnly: true })
-  @UpdateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
-    nullable: false,
-  })
+  @UpdateDateColumn({ type: 'timestamptz', nullable: false })
   updated_at: Date;
 
   @ApiProperty({
@@ -37,9 +28,6 @@ export abstract class AbstractEntity {
     readOnly: true,
     required: false,
   })
-  @DeleteDateColumn({
-    type: 'timestamp with time zone',
-    nullable: true, // Must be nullable for non-deleted records
-  })
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
   deleted_at?: Date; // Make optional in the class too
 }

@@ -17,11 +17,11 @@ export const crudGeneralOptions: Partial<CrudOptions> = {
     join: {
       createdBy: {
         eager: true,
-        allow: ['role', 'firstName', 'lastName', 'email'],
+        allow: ['nom'],
       },
       updatedBy: {
         eager: true,
-        allow: ['role', 'firstName', 'lastName', 'email'],
+        allow: ['nom'],
       },
     },
   },

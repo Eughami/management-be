@@ -4,11 +4,11 @@ import { AbstractEntity } from './abstract.entity';
 import { User } from './user.entity';
 
 export abstract class BaseEntity extends AbstractEntity {
-  @ApiProperty({
-    type: () => User,
-    description: 'User who created the record',
-    required: false,
-  })
+  // @ApiProperty({
+  //   type: () => User,
+  //   description: 'User who created the record',
+  //   required: false,
+  // })
   @ManyToOne(() => User, (user) => user.id, {
     // Added inverse side reference for potential future use, optional
     nullable: true, // Can system create records?
@@ -22,17 +22,17 @@ export abstract class BaseEntity extends AbstractEntity {
   @ApiProperty({
     description: 'ID of the user who created the record',
     format: 'uuid',
-    required: false,
+    readOnly: true,
   })
   @Column({ type: 'uuid', nullable: true }) // The actual foreign key column in the DB
   created_by_id: string;
 
   // --- Updated By ---
-  @ApiProperty({
-    type: () => User,
-    description: 'User who last updated the record',
-    required: false,
-  })
+  // @ApiProperty({
+  //   type: () => User,
+  //   description: 'User who last updated the record',
+  //   required: false,
+  // })
   @ManyToOne(() => User, (user) => user.id, {
     nullable: true,
     onDelete: 'SET NULL',
@@ -45,7 +45,7 @@ export abstract class BaseEntity extends AbstractEntity {
   @ApiProperty({
     description: 'ID of the user who last updated the record',
     format: 'uuid',
-    required: false,
+    readOnly: true,
   })
   @Column({ type: 'uuid', nullable: true }) // The actual foreign key column
   updated_by_id: string;

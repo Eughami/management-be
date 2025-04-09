@@ -13,6 +13,15 @@ import { ApiTags } from '@nestjs/swagger';
   routes: {
     exclude: ['recoverOneBase', 'createManyBase'],
   },
+  query: {
+    ...crudGeneralOptions.query,
+    join: {
+      ...crudGeneralOptions.query.join,
+      projects: {
+        eager: false,
+      },
+    },
+  },
 })
 @Controller('beneficiaires')
 @ApiTags('Beneficiaires')

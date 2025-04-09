@@ -18,11 +18,11 @@ export class User extends AbstractEntity {
   // --- Add Auditing Fields Directly to User ---
 
   // --- Created By (Self-Reference) ---
-  @ApiProperty({
-    type: () => User,
-    description: 'Admin or system user who created this user record',
-    required: false,
-  })
+  // @ApiProperty({
+  //   type: () => User,
+  //   description: 'Admin or system user who created this user record',
+  //   readOnly: true,
+  // })
   @ManyToOne(() => User, {
     // Relation points back to the User entity itself
     nullable: true, // IMPORTANT: Often nullable (e.g., self-registration)
@@ -35,17 +35,17 @@ export class User extends AbstractEntity {
   @ApiProperty({
     description: 'ID of the user who created this record',
     format: 'uuid',
-    required: false,
+    readOnly: true,
   })
   @Column({ type: 'uuid', nullable: true }) // Foreign key column
   created_by_id?: string;
 
   // --- Updated By (Self-Reference) ---
-  @ApiProperty({
-    type: () => User,
-    description: 'Admin or system user who last updated this user record',
-    required: false,
-  })
+  // @ApiProperty({
+  //   type: () => User,
+  //   description: 'Admin or system user who last updated this user record',
+  //   required: false,
+  // })
   @ManyToOne(() => User, {
     // Relation points back to the User entity itself
     nullable: true, // Can be null initially or if updated by system
@@ -58,7 +58,7 @@ export class User extends AbstractEntity {
   @ApiProperty({
     description: 'ID of the user who last updated this record',
     format: 'uuid',
-    required: false,
+    readOnly: true,
   })
   @Column({ type: 'uuid', nullable: true }) // Foreign key column
   updated_by_id?: string;
