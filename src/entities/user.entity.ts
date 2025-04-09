@@ -1,13 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CrudValidationGroups } from '@nestjsx/crud';
-import { Column, Entity, ManyToOne, JoinColumn } from 'typeorm'; // <-- Import ManyToOne, JoinColumn
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Column, Entity, ManyToOne, JoinColumn, BeforeInsert } from 'typeorm'; // <-- Import ManyToOne, JoinColumn
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { AbstractEntity } from './abstract.entity';
+import * as bcrypt from 'bcrypt';
 
 const { CREATE, UPDATE } = CrudValidationGroups;
 
 @Entity()
 export class User extends AbstractEntity {
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
   @ApiProperty({ description: 'User full name', example: 'John Doe' })
   @IsString({ always: true })
   @IsNotEmpty({ groups: [CREATE] })
@@ -15,9 +21,22 @@ export class User extends AbstractEntity {
   @Column({ type: 'text', nullable: false })
   name: string;
 
-  // --- Add Auditing Fields Directly to User ---
+  @ApiProperty({ description: 'User email address' })
+  @IsEmail()
+  @IsNotEmpty({ groups: [CREATE] })
+  @IsOptional({ groups: [UPDATE] })
+  @Column({ type: 'text', nullable: false, unique: true })
+  email: string;
 
-  // --- Created By (Self-Reference) ---
+  @ApiProperty({ description: 'User password' })
+  @IsNotEmpty({ groups: [CREATE] })
+  @IsOptional({ groups: [UPDATE] })
+  @Column({ type: 'text', nullable: false })
+  password: string;
+
+  @Column({ type: 'text', nullable: true })
+  accessToken?: string;
+
   // @ApiProperty({
   //   type: () => User,
   //   description: 'Admin or system user who created this user record',
@@ -40,7 +59,6 @@ export class User extends AbstractEntity {
   @Column({ type: 'uuid', nullable: true }) // Foreign key column
   created_by_id?: string;
 
-  // --- Updated By (Self-Reference) ---
   // @ApiProperty({
   //   type: () => User,
   //   description: 'Admin or system user who last updated this user record',
@@ -62,6 +80,4 @@ export class User extends AbstractEntity {
   })
   @Column({ type: 'uuid', nullable: true }) // Foreign key column
   updated_by_id?: string;
-
-  // Add other user-specific fields here (email, passwordHash, roles, etc.)
 }

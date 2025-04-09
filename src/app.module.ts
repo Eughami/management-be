@@ -6,6 +6,7 @@ import { BeneficiairesModule } from './modules/beneficiaires';
 import { ExpertsModule } from './modules/experts';
 import { OperationFinancesModule } from './modules/operations-finance';
 import { OperationTechniquesModule } from './modules/operations-technique';
+import { SeederModule } from './modules/seeder';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { OperationTechniquesModule } from './modules/operations-technique';
       synchronize: false,
       uuidExtension: 'pgcrypto',
     }),
+    SeederModule,
     UsersModule,
     ProjectsModule,
     BeneficiairesModule,
