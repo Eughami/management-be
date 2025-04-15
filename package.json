@@ -5,6 +5,9 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "typeorm": "ts-node --project ./tsconfig.json ./node_modules/typeorm/cli.js -d ormconfig.ts",
     "migration:create": "npm run typeorm migration:create ./migrations/$npm_config_name",
