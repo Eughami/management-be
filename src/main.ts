@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('Project Management')
     .setDescription('The Project management API description')
     .setVersion('20250408.0')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

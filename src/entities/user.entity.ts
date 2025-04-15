@@ -1,9 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CrudValidationGroups } from '@nestjsx/crud';
 import { Column, Entity, ManyToOne, JoinColumn, BeforeInsert } from 'typeorm'; // <-- Import ManyToOne, JoinColumn
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { AbstractEntity } from './abstract.entity';
 import * as bcrypt from 'bcrypt';
+
+export enum RolesEnum {
+  Admin = 'Admin',
+  Viewer = 'Viewer',
+  System = 'System',
+}
 
 const { CREATE, UPDATE } = CrudValidationGroups;
 
@@ -33,6 +45,13 @@ export class User extends AbstractEntity {
   @IsOptional({ groups: [UPDATE] })
   @Column({ type: 'text', nullable: false })
   password: string;
+
+  @ApiProperty({ description: "User's role" })
+  @IsEnum(RolesEnum)
+  @IsNotEmpty({ groups: [CREATE] })
+  @IsOptional({ groups: [UPDATE] })
+  @Column({ type: 'text', default: RolesEnum.Admin, nullable: false })
+  role: RolesEnum;
 
   @Column({ type: 'text', nullable: true })
   accessToken?: string;

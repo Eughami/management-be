@@ -1,15 +1,24 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './modules';
-import { ProjectsModule } from './modules/projects';
-import { BeneficiairesModule } from './modules/beneficiaires';
-import { ExpertsModule } from './modules/experts';
-import { OperationFinancesModule } from './modules/operations-finance';
-import { OperationTechniquesModule } from './modules/operations-technique';
-import { SeederModule } from './modules/seeder';
+import {
+  AuthModule,
+  BeneficiairesModule,
+  ExpertsModule,
+  OperationFinancesModule,
+  OperationTechniquesModule,
+  ProjectsModule,
+  SeederModule,
+  UsersModule,
+} from './modules';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards';
+import { LoggerConfig } from './config';
+import { LoggerModule } from 'nestjs-pino';
+import { User } from './entities';
 
 @Module({
   imports: [
+    LoggerModule.forRoot(LoggerConfig),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -24,13 +33,22 @@ import { SeederModule } from './modules/seeder';
       synchronize: false,
       uuidExtension: 'pgcrypto',
     }),
-    SeederModule,
+    TypeOrmModule.forFeature([User]),
     UsersModule,
+    AuthModule,
+    SeederModule,
     ProjectsModule,
     BeneficiairesModule,
     ExpertsModule,
     OperationFinancesModule,
     OperationTechniquesModule,
+  ],
+  controllers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}
