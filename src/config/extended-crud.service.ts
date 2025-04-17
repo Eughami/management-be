@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { CrudRequest, GetManyDefaultResponse } from '@nestjsx/crud';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { plainToClass } from 'class-transformer';
@@ -13,7 +14,16 @@ export class ExtendedCrudService<T> extends TypeOrmCrudService<T> {
 
   async deleteOne(req: CrudRequest): Promise<void | T> {
     const { returnDeleted } = req.options.routes.deleteOneBase;
-    const userId = req.parsed.search.$and.pop()['id'].$eq;
+    // const userId = req.parsed.search.$and.pop()['id'].$eq;
+    const idFilter = req.parsed?.search?.$and?.find(
+      (clause) => clause && typeof clause === 'object' && 'id' in clause,
+    );
+
+    const userId = idFilter?.['id']?.$eq;
+
+    if (!userId) {
+      throw new BadRequestException('User ID not found in filters');
+    }
     const found = await this.getOneOrFail(req, returnDeleted);
     const toReturn = returnDeleted
       ? plainToClass(this.entityType, { ...found })
