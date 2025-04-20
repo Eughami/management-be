@@ -25,6 +25,25 @@ export class Project extends BaseEntity {
   @Column({ type: 'text', nullable: false })
   nom: string;
 
+  @ApiProperty({ description: 'description du projet' })
+  @IsString({ always: true })
+  @IsNotEmpty({ groups: [CREATE] })
+  @IsOptional({ groups: [UPDATE] })
+  @Column({ type: 'text', nullable: false })
+  description: string;
+
+  @ApiProperty({ description: 'statut du projet' })
+  @IsString({ always: true })
+  @IsOptional()
+  @Column({ type: 'text', default: 'active' })
+  status: string;
+
+  @ApiProperty({ description: 'type du projet' })
+  @IsOptional()
+  @IsString({ always: true })
+  @Column({ type: 'text', default: 'development' })
+  type_projet: string;
+
   @ApiProperty({ description: 'Date acquisition du projet' })
   @IsNotEmpty({ groups: [CREATE] })
   @IsOptional({ groups: [UPDATE] })
